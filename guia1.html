@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Metrología - Guía 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; padding: 1em; }
+    input, button { margin: 0.5em 0; }
+  </style>
+</head>
+<body>
+
+<h2>Metrología: Conversión de unidades</h2>
+<p>Recordá que 1 metro = 100 centímetros. Para pasar de m a cm, multiplicás por 100. Para pasar de cm a m, dividís por 100.</p>
+
+<label>Tu nombre: <input id="nombreAlumno" placeholder="Escribí tu nombre"></label>
+
+<hr>
+
+<h3>Ejercicio 1</h3>
+<p>Convertí 2,5 metros a centímetros:</p>
+<input type="text" id="ej1" placeholder="Respuesta">
+<button onclick="verificar(1, '250')">Verificar</button>
+<p id="res1"></p>
+
+<h3>Ejercicio 2</h3>
+<p>Convertí 750 centímetros a metros:</p>
+<input type="text" id="ej2" placeholder="Respuesta">
+<button onclick="verificar(2, '7.5')">Verificar</button>
+<p id="res2"></p>
+
+<script>
+function verificar(n, correcta) {
+    let nombre = document.getElementById("nombreAlumno").value.trim();
+    if (!nombre) {
+        alert("Ingresá tu nombre antes de comenzar.");
+        return;
+    }
+    let respuesta = document.getElementById("ej" + n).value.trim().replace(",", ".");
+    let correcto = parseFloat(respuesta) === parseFloat(correcta);
+    document.getElementById("res" + n).innerText = correcto ? "✔️ ¡Correcto!" : "❌ Incorrecto. Intentá de nuevo.";
+    
+    // Enviar resultado al servidor
+    fetch("https://TU-SERVIDOR.replit.app/guardar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            alumno: nombre,
+            ejercicio: "ej" + n,
+            respuesta: respuesta,
+            correcto: correcto,
+            fecha: new Date().toISOString()
+        })
+    }).catch(e => console.error("Error al enviar:", e));
+}
+</script>
+
+</body>
+</html>
